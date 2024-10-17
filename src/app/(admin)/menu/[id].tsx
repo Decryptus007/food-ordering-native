@@ -1,17 +1,25 @@
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import React, { useLayoutEffect } from "react";
 import { Link, useNavigation, useLocalSearchParams } from "expo-router";
-import products from "@/assets/data/products";
 import { defaultPizzaImage } from "@/src/components/ProductListItem";
 import { FontAwesome } from "@expo/vector-icons";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { useProduct } from "@/src/api/products";
 
 const ProductDetailsScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { data: product, error, isLoading } = useProduct(id);
+
   const navigation = useNavigation();
-
-  const product = products.find((p) => p.id.toString() === id);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       title: product ? product.name : "Menu",
@@ -32,8 +40,12 @@ const ProductDetailsScreen = () => {
     });
   }, [navigation, product, id]);
 
-  if (!product) {
-    return <Text>Product not found</Text>;
+  if (isLoading) {
+    return <ActivityIndicator />;
+  }
+
+  if (error) {
+    return <Text>Failed to fetch products</Text>;
   }
 
   return (

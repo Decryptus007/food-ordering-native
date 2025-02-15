@@ -16,7 +16,8 @@ const OrderListItem = ({ order }: OrderListItemProps) => {
 
   return (
     <Link
-      href={`/${segments[0]}/orders/${order.id}` as Href<`//orders/${number}`>}
+      // @ts-expect-error
+      href={`/${segments[0]}/orders/${order.id}`}
       asChild
     >
       <Pressable style={styles.container}>

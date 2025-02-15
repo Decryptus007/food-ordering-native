@@ -3,7 +3,11 @@ import OrderListItem from "@/src/components/OrderListItem";
 import { useAdminOrdersList } from "@/src/api/orders";
 
 export default function OrdersScreen() {
-  const { data: orders, isLoading, error } = useAdminOrdersList();
+  const {
+    data: orders,
+    isLoading,
+    error,
+  } = useAdminOrdersList({ archived: false });
 
   if (isLoading) {
     return <ActivityIndicator />;
